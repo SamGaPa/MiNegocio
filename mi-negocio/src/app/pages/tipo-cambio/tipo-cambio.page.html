@@ -1,0 +1,20 @@
+<ion-header><ion-toolbar color="primary"><ion-title>Tipo de cambio</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+  <section class="intro"><p class="eyebrow">HERRAMIENTA INFORMATIVA</p><h1>USD a MXN</h1><p>Consulta una tasa de referencia y calcula el equivalente aproximado.</p></section>
+  <ion-card><ion-card-content>
+    <form [formGroup]="formulario" (ngSubmit)="consultarYConvertir()" novalidate>
+      <ion-list><ion-item><ion-input label="Importe en dólares estadounidenses" labelPlacement="stacked" type="number" inputmode="decimal" min="0.01" [max]="maximoUsd" step="0.01" placeholder="Ejemplo: 10.00" formControlName="importeUsd" (ionInput)="limpiarResultado()"></ion-input></ion-item></ion-list>
+      @if (campoInvalido()) { <ion-note color="danger">Ingresa un importe mayor que 0 y hasta 1,000,000 USD, con máximo dos decimales.</ion-note> }
+      <ion-button expand="block" type="submit" [disabled]="estado() === 'cargando'">{{ estado() === 'cargando' ? 'Consultando…' : 'Consultar y convertir' }}</ion-button>
+    </form>
+  </ion-card-content></ion-card>
+  @if (estado() === 'error') { <ion-note class="mensaje" color="danger" role="alert">{{ mensajeError() }}</ion-note> }
+  @if (conversion(); as resultado) { <ion-card class="resultado"><ion-card-content>
+    <h2>Resultado aproximado</h2>
+    <p><strong>{{ formatearUsd(resultado.importeUsd) }}</strong> = <strong>{{ formatearMxn(resultado.importeMxn) }}</strong></p>
+    <p>1 USD = {{ resultado.tasa.rate.toFixed(4) }} MXN</p>
+    <p>Fecha de la tasa: {{ resultado.tasa.date }}</p>
+    <p>Fuente: Frankfurter.</p>
+    <ion-note>Conversión de referencia. El importe final puede variar por comisiones o por el tipo de cambio del proveedor.</ion-note>
+  </ion-card-content></ion-card> }
+</ion-content>

@@ -17,6 +17,8 @@ app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   if (error instanceof ZodError) { res.status(400).json({ error: 'Datos de entrada inválidos.', detalles: error.issues }); return; }
   const codigo = typeof error === 'object' && error !== null && 'code' in error ? (error as { code?: string }).code : undefined;
+  const estado = typeof error === 'object' && error !== null && 'status' in error ? (error as { status?: number }).status : undefined;
+  if (estado === 409) { res.status(409).json({ error: error instanceof Error ? error.message : 'La operación no se puede completar.' }); return; }
   if (codigo === 'ER_DUP_ENTRY') { res.status(409).json({ error: 'Ya existe un registro con esos datos.' }); return; }
   console.error(error);
   res.status(500).json({ error: 'Ocurrió un error interno.' });

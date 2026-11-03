@@ -1,0 +1,7 @@
+{
+  "name": "mi-negocio",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

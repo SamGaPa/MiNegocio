@@ -1,0 +1,23 @@
+<ion-header><ion-toolbar color="primary"><ion-title>Cuenta</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+  <section class="intro"><ion-icon name="log-in-outline" aria-hidden="true"></ion-icon><h1>Inicia sesión</h1><p>Accede a tu cuenta de Mi Negocio.</p></section>
+  <ion-card><ion-card-content>
+    @if (usuario(); as cuenta) {
+      <p>Sesión activa: <strong>{{ cuenta.email }}</strong></p>
+      <ion-button expand="block" (click)="cerrarSesion()">Cerrar sesión</ion-button>
+    } @else {
+      <form [formGroup]="formulario" (ngSubmit)="iniciarSesion()" novalidate>
+        <ion-list>
+          <ion-item><ion-input label="Correo electrónico" labelPlacement="stacked" type="email" autocomplete="email" formControlName="email"></ion-input></ion-item>
+          @if (formulario.controls.email.invalid && formulario.controls.email.touched) { <ion-note color="danger">Introduce un correo válido.</ion-note> }
+          <ion-item><ion-input label="Contraseña" labelPlacement="stacked" type="password" autocomplete="current-password" formControlName="contrasena"></ion-input></ion-item>
+          @if (formulario.controls.contrasena.invalid && formulario.controls.contrasena.touched) { <ion-note color="danger">Introduce tu contraseña.</ion-note> }
+        </ion-list>
+        @if (mensaje) { <ion-note color="danger" role="alert">{{ mensaje }}</ion-note> }
+        <ion-button expand="block" type="submit" [disabled]="procesando">Iniciar sesión</ion-button>
+      </form>
+    }
+    <ion-button expand="block" fill="clear" routerLink="/tabs/registro"><ion-icon slot="start" name="person-add-outline"></ion-icon>Crear usuario</ion-button>
+    <ion-button expand="block" fill="clear" routerLink="/tabs/aviso-privacidad"><ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>Aviso de privacidad</ion-button>
+  </ion-card-content></ion-card>
+</ion-content>

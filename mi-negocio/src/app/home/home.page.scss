@@ -1,0 +1,21 @@
+.intro { margin: 0.75rem 0 1rem; }
+.intro h1 { margin: 0.25rem 0; color: var(--app-text); font-size: 1.5rem; }
+.intro p:not(.eyebrow), .minimo { color: var(--app-muted); }
+.eyebrow { margin: 0; color: var(--app-accent); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; }
+ion-note { display: block; margin: 0.3rem 1rem 0.55rem; }
+.mensaje { color: var(--app-accent); font-weight: 600; }
+h2 { margin: 1.5rem 0 0.75rem; color: var(--app-text); font-size: 1.2rem; }
+ion-card { margin: 0 0 0.75rem; box-shadow: 0 3px 12px rgb(var(--app-shadow-rgb) / 12%); }
+.inactivo { opacity: 0.7; }
+.producto-cabecera { display: flex; justify-content: space-between; gap: 0.75rem; align-items: flex-start; }
+.icono-producto { position: relative; flex: 0 0 3rem; width: 3rem; height: 3rem; overflow: hidden; border: 1px solid var(--app-border); border-radius: 50%; background: var(--app-background); }
+.icono-producto img, .respaldo-icono { position: absolute; inset: 0; width: 100%; height: 100%; }
+.icono-producto img { z-index: 1; object-fit: cover; }
+.icono-producto img.oculto { display: none; }
+.respaldo-icono { display: grid; place-items: center; font-size: 1.35rem; }
+.producto-cabecera h3 { margin: 0; color: var(--app-text); font-size: 1.05rem; }
+.producto-cabecera p { margin: 0.2rem 0; color: var(--app-muted); }
+.existencia { display: flex; justify-content: space-between; margin: 0.75rem 0 0.25rem; color: var(--app-body); }
+.existencia strong { color: var(--app-accent); }
+.minimo { margin: 0.2rem 0; font-size: 0.9rem; }
+.acciones { display: flex; justify-content: flex-end; margin-top: 0.5rem; }

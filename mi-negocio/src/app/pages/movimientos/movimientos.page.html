@@ -1,0 +1,13 @@
+<ion-header><ion-toolbar color="primary"><ion-title>Movimientos</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+  <section class="intro"><p class="eyebrow">CONTROL DE INVENTARIO</p><h1>Entrada o salida</h1><p>Registra compras, ventas y ajustes sin alterar el historial.</p></section>
+  <form [formGroup]="formulario" (ngSubmit)="guardarMovimiento()" novalidate><ion-list inset>
+    <ion-item><ion-select label="Producto activo" placeholder="Selecciona un producto" formControlName="productoId">@for (detalle of productosActivos(); track detalle.producto.id) { <ion-select-option [value]="detalle.producto.id">{{ detalle.producto.nombre }} ({{ detalle.existencia }} u.)</ion-select-option> }</ion-select></ion-item>@if (campoInvalido('productoId')) { <ion-note color="danger">Selecciona un producto activo.</ion-note> }
+    <ion-item><ion-select label="Tipo" formControlName="tipo"><ion-select-option value="entrada">Entrada</ion-select-option><ion-select-option value="salida">Salida</ion-select-option></ion-select></ion-item>
+    <ion-item><ion-input label="Cantidad" labelPlacement="stacked" type="number" min="1" step="1" formControlName="cantidad"></ion-input></ion-item>@if (campoInvalido('cantidad')) { <ion-note color="danger">Ingresa un entero positivo.</ion-note> }
+    <ion-item><ion-input label="Fecha" labelPlacement="stacked" type="date" formControlName="fecha"></ion-input></ion-item>@if (campoInvalido('fecha')) { <ion-note color="danger">Selecciona una fecha válida.</ion-note> }
+    <ion-item><ion-input label="Motivo" labelPlacement="stacked" placeholder="Ejemplo: Venta, compra o ajuste" formControlName="motivo"></ion-input></ion-item>@if (campoInvalido('motivo')) { <ion-note color="danger">El motivo es obligatorio.</ion-note> }
+  </ion-list><ion-button expand="block" type="submit" [disabled]="procesando || productosActivos().length === 0">Registrar movimiento</ion-button></form>
+  @if (mensaje) { <p class="mensaje" role="status">{{ mensaje }}</p> }
+  <section class="historial"><h2>Historial</h2>@for (detalle of movimientos(); track detalle.movimiento.id) { <ion-card><ion-card-content><div class="cabecera"><div><h3>{{ detalle.producto?.nombre ?? 'Producto no disponible' }}</h3><p>{{ detalle.movimiento.fecha }} · {{ detalle.movimiento.motivo }}</p></div><strong [class.salida]="detalle.movimiento.tipo === 'salida'">{{ detalle.movimiento.tipo === 'entrada' ? '+' : '-' }}{{ detalle.movimiento.cantidad }} u.</strong></div><p class="tipo">{{ detalle.movimiento.tipo === 'entrada' ? 'Entrada' : 'Salida' }}</p></ion-card-content></ion-card> } @empty { <p class="vacio">Aún no hay movimientos registrados.</p> }</section>
+</ion-content>

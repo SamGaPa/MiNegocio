@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inventario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <section class="intro">
+    <p class="eyebrow">INVENTARIO</p>
+    <h1>{{ idEditando ? 'Editar producto' : 'Registrar producto' }}</h1>
+    <p>Agrega y administra los productos de tu emprendimiento.</p>
+  </section>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardarProducto()" novalidate>
+    <ion-list inset>
+      <ion-item>
+        <ion-input label="Nombre del producto" labelPlacement="stacked" placeholder="Ejemplo: Pulsera azul" formControlName="nombre"></ion-input>
+      </ion-item>
+      @if (campoInvalido('nombre')) { <ion-note color="danger">El nombre es obligatorio.</ion-note> }
+
+      <ion-item>
+        <ion-input label="Categoría" labelPlacement="stacked" placeholder="Ejemplo: Accesorios" formControlName="categoria"></ion-input>
+      </ion-item>
+      @if (campoInvalido('categoria')) { <ion-note color="danger">La categoría es obligatoria.</ion-note> }
+
+      <ion-item>
+        <ion-input label="Cantidad inicial" labelPlacement="stacked" type="number" min="0" step="1" formControlName="stockInicial"></ion-input>
+      </ion-item>
+      @if (idEditando) { <ion-note>El stock inicial no se puede modificar.</ion-note> }
+      @if (campoInvalido('stockInicial')) { <ion-note color="danger">Ingresa un entero mayor o igual a cero.</ion-note> }
+
+      <ion-item>
+        <ion-input label="Cantidad mínima" labelPlacement="stacked" type="number" min="0" step="1" formControlName="stockMinimo"></ion-input>
+      </ion-item>
+      @if (campoInvalido('stockMinimo')) { <ion-note color="danger">Ingresa un entero mayor o igual a cero.</ion-note> }
+    </ion-list>
+
+    <ion-button expand="block" type="submit" [disabled]="procesando || (!idEditando && productosConStock().length >= 20)">
+      {{ idEditando ? 'Guardar cambios' : 'Registrar producto' }}
+    </ion-button>
+    @if (idEditando) {
+      <ion-button expand="block" fill="clear" type="button" (click)="cancelarEdicion()">Cancelar edición</ion-button>
+    }
+  </form>
+
+  @if (mensaje) { <p class="mensaje" role="status">{{ mensaje }}</p> }
+
+  <h2>Mis productos</h2>
+
+  @for (detalle of productosConStock(); track detalle.producto.id) {
+    <ion-card [class.inactivo]="!detalle.producto.activo">
+      <ion-card-content>
+        <div class="producto-cabecera">
+          <div class="icono-producto" aria-hidden="true">
+            <img [src]="obtenerIconoProducto(detalle.producto)" alt="" loading="lazy" referrerpolicy="no-referrer" (error)="$any($event.target).classList.add('oculto')">
+            <span class="respaldo-icono">📦</span>
+          </div>
+          <div>
+            <h3>{{ detalle.producto.nombre }}</h3>
+            <p>{{ detalle.producto.categoria }}</p>
+          </div>
+          <ion-badge [color]="detalle.producto.activo ? 'success' : 'medium'">{{ detalle.producto.activo ? 'Activo' : 'Inactivo' }}</ion-badge>
+        </div>
+        <div class="existencia"><span>Existencias</span><strong>{{ detalle.existencia }} unidades</strong></div>
+        <p class="minimo">Stock mínimo: {{ detalle.producto.stockMinimo }}</p>
+        @if (detalle.stockBajo) {
+          <ion-note color="danger"><strong>Stock bajo:</strong> considera reponer este producto.</ion-note>
+        }
+        <div class="acciones">
+          <ion-button size="small" fill="outline" [disabled]="procesando" (click)="prepararEdicion(detalle.producto)">Editar</ion-button>
+          <ion-button size="small" fill="clear" color="medium" [disabled]="procesando" (click)="cambiarEstado(detalle.producto)">
+            {{ detalle.producto.activo ? 'Desactivar' : 'Reactivar' }}
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  } @empty {
+    <p>Todavía no has registrado productos.</p>
+  }
+</ion-content>

@@ -1,0 +1,10 @@
+.intro { margin: .75rem 0 1rem; }
+.intro h1, h2 { color: var(--app-text); }
+.intro h1 { margin: .25rem 0; font-size: 1.5rem; }
+.intro p { color: var(--app-body); }
+.eyebrow { margin: 0; color: var(--app-accent); font-size: .72rem; font-weight: 700; letter-spacing: .08em; }
+ion-card { margin: 0 0 .75rem; box-shadow: 0 3px 12px rgb(var(--app-shadow-rgb) / 12%); }
+ion-note { display: block; margin: .5rem 1rem; }
+.mensaje { font-weight: 600; }
+.resultado p { color: var(--app-body); }
+.resultado strong { color: var(--app-accent); }

@@ -20,6 +20,8 @@ La API escucha por defecto en `http://localhost:3000`. El celular no debe conect
 - `POST /api/v1/auth/login`: devuelve un JWT temporal.
 - `GET /api/v1/estado`: devuelve productos, gastos y movimientos del usuario del JWT.
 - `POST /api/v1/estado/productos`, `/gastos`, `/movimientos`: registra información para el usuario autenticado.
+- `PATCH /api/v1/estado/productos/:id`: actualiza nombre, categoría, mínimo y estado activo de un producto; el stock inicial no se modifica.
+- `PATCH` y `DELETE /api/v1/estado/gastos/:id`: actualiza o elimina un gasto de la cuenta autenticada.
 - `GET /health`: comprueba API y conexión a la base de datos.
 
 Para las rutas de estado usa `Authorization: Bearer <token>`. Nunca conectes Ionic directamente a MySQL ni copies estas variables al frontend.

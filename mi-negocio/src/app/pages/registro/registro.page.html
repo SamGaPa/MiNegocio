@@ -1,0 +1,23 @@
+<ion-header><ion-toolbar color="primary"><ion-title>Registro</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding">
+  <ion-card class="registro"><ion-card-content>
+    <ion-icon class="icono" name="person-add-outline" aria-hidden="true"></ion-icon>
+    <h1>Alta de nuevos usuarios</h1>
+    <p>Crea una cuenta para utilizar Mi Negocio.</p>
+    <form [formGroup]="formulario" (ngSubmit)="registrar()" novalidate>
+      <ion-list>
+        <ion-item><ion-input label="Correo electrónico" labelPlacement="stacked" type="email" autocomplete="email" formControlName="email"></ion-input></ion-item>
+        @if (formulario.controls.email.invalid && formulario.controls.email.touched) { <ion-note color="danger">Introduce un correo válido.</ion-note> }
+        <ion-item><ion-input label="Contraseña" labelPlacement="stacked" type="password" autocomplete="new-password" formControlName="contrasena"></ion-input></ion-item>
+        @if (formulario.controls.contrasena.invalid && formulario.controls.contrasena.touched) { <ion-note color="danger">La contraseña debe tener al menos 8 caracteres.</ion-note> }
+        <ion-item><ion-input label="Confirmar contraseña" labelPlacement="stacked" type="password" autocomplete="new-password" formControlName="confirmacion"></ion-input></ion-item>
+        @if (formulario.controls.confirmacion.invalid && formulario.controls.confirmacion.touched) { <ion-note color="danger">Confirma tu contraseña.</ion-note> }
+        <ion-item lines="none"><ion-checkbox justify="start" formControlName="aceptaAvisoPrivacidad">He leído y acepto el aviso de privacidad.</ion-checkbox></ion-item>
+        @if (formulario.controls.aceptaAvisoPrivacidad.invalid && formulario.controls.aceptaAvisoPrivacidad.touched) { <ion-note color="danger">Debes aceptar el aviso de privacidad para registrarte.</ion-note> }
+      </ion-list>
+      @if (mensaje) { <ion-note [color]="exito ? 'success' : 'danger'" role="status">{{ mensaje }}</ion-note> }
+      <ion-button expand="block" type="submit" [disabled]="procesando">Crear cuenta</ion-button>
+    </form>
+    <ion-button fill="clear" routerLink="/tabs/login"><ion-icon slot="start" name="arrow-back-outline"></ion-icon>Volver a iniciar sesión</ion-button>
+  </ion-card-content></ion-card>
+</ion-content>
