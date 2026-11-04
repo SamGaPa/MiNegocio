@@ -12,12 +12,20 @@ API Express + TypeScript + MySQL para datos por usuario.
 6. Ejecuta las tablas: `npm run migrate`.
 7. Inicia la API: `npm run dev`.
 
+## Correo transaccional con Resend
+
+Configura en el servidor `RESEND_API_KEY` con una clave de tipo **Sending access** y `EMAIL_FROM` con un remitente autorizado por Resend. Estas variables nunca van en Ionic ni en Git.
+
+La migración `002_email_verification_and_recovery.sql` agrega la verificación de correo y una tabla de códigos de un solo uso. Ejecuta `npm run migrate` antes de desplegar una versión que use estas rutas. Los códigos se almacenan como hash; los de verificación vencen en 24 horas y los de recuperación en 15 minutos.
+
 La API escucha por defecto en `http://localhost:3000`. El celular no debe conectarse directamente a MySQL; más adelante se configurará una URL HTTPS pública para esta API.
 
 ## Rutas iniciales
 
 - `POST /api/v1/auth/registro`: crea usuario, guarda hash bcrypt y registra consentimiento del aviso de privacidad.
 - `POST /api/v1/auth/login`: devuelve un JWT temporal.
+- `POST /api/v1/auth/verificacion/solicitar` y `/confirmar`: reenvía o confirma el correo con un código temporal.
+- `POST /api/v1/auth/recuperacion/solicitar` y `/confirmar`: permite restablecer la contraseña con un código temporal.
 - `GET /api/v1/estado`: devuelve productos, gastos y movimientos del usuario del JWT.
 - `POST /api/v1/estado/productos`, `/gastos`, `/movimientos`: registra información para el usuario autenticado.
 - `PATCH /api/v1/estado/productos/:id`: actualiza nombre, categoría, mínimo y estado activo de un producto; el stock inicial no se modifica.

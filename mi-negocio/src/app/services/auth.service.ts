@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 
 export interface UsuarioAutenticado { id: string; email: string; nombre: string | null; }
 interface RespuestaAutenticacion { token: string; usuario: UsuarioAutenticado; }
+interface RespuestaRegistro { requiereVerificacion: true; email: string; }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,20 +18,30 @@ export class AuthService {
   readonly estaAutenticado = computed(() => this.tokenInterno() !== null);
 
   async iniciarSesion(email: string, contrasena: string): Promise<void> {
-    const respuesta = await this.solicitar('/api/v1/auth/login', { email, contrasena });
+    const respuesta = await this.solicitar<RespuestaAutenticacion>('/api/v1/auth/login', { email, contrasena });
     this.establecerSesion(respuesta);
   }
 
-  async registrar(email: string, contrasena: string, aceptaAvisoPrivacidad: true): Promise<void> {
-    const respuesta = await this.solicitar('/api/v1/auth/registro', { email, contrasena, aceptaAvisoPrivacidad });
-    this.establecerSesion(respuesta);
+  async registrar(email: string, contrasena: string, aceptaAvisoPrivacidad: true): Promise<string> {
+    const respuesta = await this.solicitar<RespuestaRegistro>('/api/v1/auth/registro', { email, contrasena, aceptaAvisoPrivacidad });
+    if (!respuesta.requiereVerificacion || !respuesta.email) throw new Error('La respuesta del servidor no es válida.');
+    return respuesta.email;
+  }
+
+  async solicitarVerificacion(email: string): Promise<void> { await this.solicitar('/api/v1/auth/verificacion/solicitar', { email }); }
+  async confirmarVerificacion(email: string, codigo: string): Promise<void> {
+    this.establecerSesion(await this.solicitar<RespuestaAutenticacion>('/api/v1/auth/verificacion/confirmar', { email, codigo }));
+  }
+  async solicitarRecuperacion(email: string): Promise<void> { await this.solicitar('/api/v1/auth/recuperacion/solicitar', { email }); }
+  async confirmarRecuperacion(email: string, codigo: string, contrasena: string): Promise<void> {
+    await this.solicitar('/api/v1/auth/recuperacion/confirmar', { email, codigo, contrasena });
   }
 
   cerrarSesion(): void { this.tokenInterno.set(null); this.usuarioInterno.set(null); }
 
-  private async solicitar(ruta: string, cuerpo: object): Promise<RespuestaAutenticacion> {
+  private async solicitar<T = unknown>(ruta: string, cuerpo: object): Promise<T> {
     try {
-      return await firstValueFrom(this.http.post<RespuestaAutenticacion>(`${environment.apiUrl}${ruta}`, cuerpo));
+      return await firstValueFrom(this.http.post<T>(`${environment.apiUrl}${ruta}`, cuerpo));
     } catch (error) { throw new Error(mensajeDeError(error)); }
   }
 

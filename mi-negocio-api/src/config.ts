@@ -12,6 +12,8 @@ const esquema = z.object({
   DB_USER: z.string().min(1),
   DB_PASSWORD: z.string().min(1),
   DB_SSL_CA_PATH: z.string().min(1),
+  RESEND_API_KEY: z.string().startsWith('re_').optional(),
+  EMAIL_FROM: z.string().min(3).optional(),
 });
 
 export const config = esquema.parse(process.env);

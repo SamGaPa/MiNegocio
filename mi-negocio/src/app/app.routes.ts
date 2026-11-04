@@ -34,6 +34,14 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/registro/registro.page').then((m) => m.RegistroPage),
       },
       {
+        path: 'verificar-cuenta',
+        loadComponent: () => import('./pages/verificar-cuenta/verificar-cuenta.page').then((m) => m.VerificarCuentaPage),
+      },
+      {
+        path: 'recuperar-contrasena',
+        loadComponent: () => import('./pages/recuperar-contrasena/recuperar-contrasena.page').then((m) => m.RecuperarContrasenaPage),
+      },
+      {
         path: 'aviso-privacidad',
         loadComponent: () =>
           import('./pages/aviso-privacidad/aviso-privacidad.page').then((m) => m.AvisoPrivacidadPage),
